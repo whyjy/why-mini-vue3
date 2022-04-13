@@ -2,7 +2,7 @@
  * @Author: wuhongyi5
  * @Date: 2022-04-09 18:04:00
  * @LastEditors: wuhongyi5
- * @LastEditTime: 2022-04-11 10:13:35
+ * @LastEditTime: 2022-04-13 23:36:31
  * @FilePath: /why-mini-vue3/src/reactivity/effect.ts
  * @description: 
  */
@@ -13,7 +13,7 @@ class ReactiveEffect {
     }
     run() {
         activeEffect = this
-        this._fn()
+        return this._fn()
     }
 }
 
@@ -46,4 +46,5 @@ let activeEffect;
 export function effect(fn) {
     const _effect = new ReactiveEffect(fn)
     _effect.run()
+    return _effect.run.bind(_effect)
 }

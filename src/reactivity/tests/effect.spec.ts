@@ -1,11 +1,4 @@
-/*
- * @Author: wuhongyi5
- * @Date: 2022-04-02 10:40:28
- * @LastEditors: wuhongyi5
- * @LastEditTime: 2022-04-13 23:12:44
- * @FilePath: /why-mini-vue3/src/reactivity/tests/effect.spec.ts
- * @description: 
- */
+
 import { reactive } from '../../reactivity/reactive'
 import { effect } from '../../reactivity/effect'
 describe('effect', () => {
@@ -36,5 +29,34 @@ describe('effect', () => {
         const r = runner()
         expect(foo).toBe(12)
         expect(r).toBe('foo')
+    })
+
+    it('scheduler', () => {
+        //1、通过effect的第二个参数给定scheduler的fn
+        //2、当effect第一次执行的时候执行fn
+        //3、当响应式对象set update时不会执行fn而是执行scheduler
+        //4、如果当执行runner的时候，会再次执行fn
+        //?TODO 为什么响应对象更新时要执行scheduler呢
+        let dummy;
+        let run: any
+        const scheduler = jest.fn(() => {
+            run = runner
+        })
+        const obj = reactive({ foo: 1 })
+        const runner = effect(
+            () => {
+                dummy = obj.foo
+            },
+            {
+                scheduler
+            }
+        )
+        expect(scheduler).not.toHaveBeenCalled()
+        expect(dummy).toBe(1)
+        obj.foo++
+        expect(scheduler).toHaveBeenCalledTimes(1);
+        expect(dummy).toBe(1)
+        run()
+        expect(dummy).toBe(2)
     })
 })

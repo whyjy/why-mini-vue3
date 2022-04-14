@@ -1,14 +1,7 @@
-/*
- * @Author: wuhongyi5
- * @Date: 2022-04-09 18:04:00
- * @LastEditors: wuhongyi5
- * @LastEditTime: 2022-04-13 23:36:31
- * @FilePath: /why-mini-vue3/src/reactivity/effect.ts
- * @description: 
- */
+
 class ReactiveEffect {
     private _fn: any
-    constructor(fn) {
+    constructor(fn, public scheduler?) {
         this._fn = fn
     }
     run() {
@@ -39,12 +32,18 @@ export function trigger(target, key) {
     let depsMap = targetMap.get(target)
     let dep = depsMap.get(key)
     for (const effect of dep) {
-        effect.run()
+        if (effect.scheduler) {
+            effect.scheduler()
+        } else {
+            effect.run()
+        }
     }
 }
 let activeEffect;
-export function effect(fn) {
-    const _effect = new ReactiveEffect(fn)
+export function effect(fn, options: any = {}) {
+    const _effect = new ReactiveEffect(fn, options.scheduler)
     _effect.run()
-    return _effect.run.bind(_effect)
+    const runner = _effect.run.bind(_effect)
+    return runner
 }
+

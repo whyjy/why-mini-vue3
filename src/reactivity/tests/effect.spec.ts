@@ -1,6 +1,14 @@
+/*
+ * @Author: wuhongyi5
+ * @Date: 2022-04-02 10:40:28
+ * @LastEditors: wuhongyi5
+ * @LastEditTime: 2022-04-17 18:15:40
+ * @FilePath: /why-mini-vue3/src/reactivity/tests/effect.spec.ts
+ * @description: 
+ */
 
 import { reactive } from '../../reactivity/reactive'
-import { effect } from '../../reactivity/effect'
+import { effect, stop } from '../../reactivity/effect'
 describe('effect', () => {
 
     it('happy path', () => {
@@ -58,5 +66,38 @@ describe('effect', () => {
         expect(dummy).toBe(1)
         run()
         expect(dummy).toBe(2)
+    })
+
+    it('stop', () => {
+        let dummy
+        const obj = reactive({ prop: 1 })
+        const runner = effect(() => {
+            dummy = obj.prop
+        })
+        obj.prop = 2
+        expect(dummy).toBe(2)
+        stop(runner)
+        obj.prop = 3
+        expect(dummy).toBe(2)
+
+        runner()
+        expect(dummy).toBe(3)
+    })
+
+    //stop的回调函数
+    it('onStop', () => {
+        const obj = reactive({ foo: 1 })
+        const onStop = jest.fn()
+        let dummy
+        const runner = effect(
+            () => {
+                dummy = obj.foo
+            },
+            {
+                onStop
+            }
+        )
+        stop(runner)
+        expect(onStop).toBeCalledTimes(1)
     })
 })

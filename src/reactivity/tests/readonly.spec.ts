@@ -2,12 +2,12 @@
  * @Author: wuhongyi
  * @Date: 2022-04-18 09:36:53
  * @LastEditors: wuhongyi5
- * @LastEditTime: 2022-04-18 11:03:07
+ * @LastEditTime: 2022-04-19 09:45:48
  * @FilePath: /why-mini-vue3/src/reactivity/tests/readonly.spec.ts
  * @description: 
  */
 
-import { readonly } from "../reactive"
+import { isReadonly, readonly } from "../reactive"
 
 describe('readonly', () => {
     it('happy path', () => {
@@ -16,6 +16,7 @@ describe('readonly', () => {
         const wrapped = readonly(original)
         expect(wrapped).not.toBe(original)
         expect(wrapped.foo).toBe(1)
+        expect(isReadonly(wrapped)).toBe(true)
     })
     it('warn then call set', () => {
         console.warn = jest.fn()

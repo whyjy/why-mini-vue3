@@ -2,12 +2,13 @@
  * @Author: wuhongyi5
  * @Date: 2022-04-18 10:46:47
  * @LastEditors: wuhongyi5
- * @LastEditTime: 2022-04-18 11:03:52
+ * @LastEditTime: 2022-04-19 10:00:15
  * @FilePath: /why-mini-vue3/src/reactivity/baseHandlers.ts
  * @description: 
  */
 
 import { track, trigger } from "./effect"
+import { ReactiveFlags } from "./reactive"
 
 //缓存函数，避免每次都创建
 const get = createGetter()
@@ -16,6 +17,11 @@ const readonlyGet = createGetter(true)
 //高阶函数
 function createGetter(isReadonly = false) {
     return function get(target, key) {
+        if (key === ReactiveFlags.IS_REACTIVE) {
+            return !isReadonly
+        } else if (key === ReactiveFlags.IS_READONLY) {
+            return isReadonly
+        }
         const res = Reflect.get(target, key)
         //依赖收集
         if (!isReadonly) {
@@ -41,7 +47,7 @@ export const mutableHandlers = {
 export const readonlyHandlers = {
     get: readonlyGet,
     set(target, key, value) {
-        //?TODO 输出警告
+        //不能设置，输出警告
         console.warn(`This ${key} is connot be set because ${target} is read-only`)
         return true
     }

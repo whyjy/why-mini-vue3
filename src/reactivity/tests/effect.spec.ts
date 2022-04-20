@@ -2,7 +2,7 @@
  * @Author: wuhongyi5
  * @Date: 2022-04-02 10:40:28
  * @LastEditors: wuhongyi5
- * @LastEditTime: 2022-04-17 18:15:40
+ * @LastEditTime: 2022-04-20 21:40:24
  * @FilePath: /why-mini-vue3/src/reactivity/tests/effect.spec.ts
  * @description: 
  */
@@ -77,7 +77,8 @@ describe('effect', () => {
         obj.prop = 2
         expect(dummy).toBe(2)
         stop(runner)
-        obj.prop = 3
+        // obj.prop = 3
+        obj.prop++
         expect(dummy).toBe(2)
 
         runner()

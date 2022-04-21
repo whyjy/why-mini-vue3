@@ -2,13 +2,14 @@
  * @Author: wuhongyi5
  * @Date: 2022-04-18 10:46:47
  * @LastEditors: wuhongyi5
- * @LastEditTime: 2022-04-19 10:00:15
+ * @LastEditTime: 2022-04-21 10:10:14
  * @FilePath: /why-mini-vue3/src/reactivity/baseHandlers.ts
  * @description: 
  */
 
+import { isObject } from "../shared"
 import { track, trigger } from "./effect"
-import { ReactiveFlags } from "./reactive"
+import { reactive, ReactiveFlags, readonly } from "./reactive"
 
 //缓存函数，避免每次都创建
 const get = createGetter()
@@ -23,6 +24,10 @@ function createGetter(isReadonly = false) {
             return isReadonly
         }
         const res = Reflect.get(target, key)
+        if (isObject(res)) {
+            console.log(reactive(res))
+            return isReadonly ? readonly(res) : reactive(res)
+        }
         //依赖收集
         if (!isReadonly) {
             track(target, key)

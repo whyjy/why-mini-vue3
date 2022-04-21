@@ -2,7 +2,7 @@
  * @Author: wuhongyi
  * @Date: 2022-04-18 09:36:53
  * @LastEditors: wuhongyi5
- * @LastEditTime: 2022-04-19 09:45:48
+ * @LastEditTime: 2022-04-21 10:14:38
  * @FilePath: /why-mini-vue3/src/reactivity/tests/readonly.spec.ts
  * @description: 
  */
@@ -17,6 +17,10 @@ describe('readonly', () => {
         expect(wrapped).not.toBe(original)
         expect(wrapped.foo).toBe(1)
         expect(isReadonly(wrapped)).toBe(true)
+        expect(isReadonly(original)).toBe(false)
+        //测试嵌套对象是否转换成功
+        expect(isReadonly(wrapped.bar)).toBe(true)
+        expect(isReadonly(original.bar)).toBe(false)
     })
     it('warn then call set', () => {
         console.warn = jest.fn()

@@ -2,11 +2,11 @@
  * @Author: wuhongyi5
  * @Date: 2022-04-06 07:27:58
  * @LastEditors: wuhongyi5
- * @LastEditTime: 2022-04-19 10:00:33
+ * @LastEditTime: 2022-04-22 10:03:46
  * @FilePath: /why-mini-vue3/src/reactivity/reactive.ts
  * @description: 
  */
-import { mutableHandlers, readonlyHandlers } from "./baseHandlers"
+import { mutableHandlers, readonlyHandlers, shallowReadonlyHandlers } from "./baseHandlers"
 
 export const enum ReactiveFlags {
     IS_REACTIVE = "__v_isReactive",
@@ -20,7 +20,9 @@ export function reactive(raw) {
 export function readonly(raw) {
     return createActiveObject(raw, readonlyHandlers)
 }
-
+export function shallowReadonly(raw) {
+    return createActiveObject(raw, shallowReadonlyHandlers)
+}
 export function isReactive(value) {
     return !!value[ReactiveFlags.IS_REACTIVE]
 }

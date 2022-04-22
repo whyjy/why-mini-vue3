@@ -2,12 +2,12 @@
  * @Author: wuhongyi5
  * @Date: 2022-04-18 10:46:47
  * @LastEditors: wuhongyi5
- * @LastEditTime: 2022-04-21 10:10:14
+ * @LastEditTime: 2022-04-22 11:01:19
  * @FilePath: /why-mini-vue3/src/reactivity/baseHandlers.ts
  * @description: 
  */
 
-import { isObject } from "../shared"
+import { extend, isObject } from "../shared"
 import { track, trigger } from "./effect"
 import { reactive, ReactiveFlags, readonly } from "./reactive"
 
@@ -15,8 +15,9 @@ import { reactive, ReactiveFlags, readonly } from "./reactive"
 const get = createGetter()
 const set = createSetter()
 const readonlyGet = createGetter(true)
+const shallowReadonlyGet = createGetter(true, true)
 //高阶函数
-function createGetter(isReadonly = false) {
+function createGetter(isReadonly = false, shallow = false) {
     return function get(target, key) {
         if (key === ReactiveFlags.IS_REACTIVE) {
             return !isReadonly
@@ -24,6 +25,9 @@ function createGetter(isReadonly = false) {
             return isReadonly
         }
         const res = Reflect.get(target, key)
+        if (shallow) {
+            return res
+        }
         if (isObject(res)) {
             console.log(reactive(res))
             return isReadonly ? readonly(res) : reactive(res)
@@ -57,3 +61,7 @@ export const readonlyHandlers = {
         return true
     }
 }
+//readonlyHandlers中的set和shallowReadonlyHandlers中的set是一样的，就用extent方法处理，这个操作真实绝
+export const shallowReadonlyHandlers = extend({}, readonlyHandlers, {
+    get: shallowReadonlyGet
+})

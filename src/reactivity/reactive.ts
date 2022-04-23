@@ -2,7 +2,7 @@
  * @Author: wuhongyi5
  * @Date: 2022-04-06 07:27:58
  * @LastEditors: wuhongyi5
- * @LastEditTime: 2022-04-22 10:03:46
+ * @LastEditTime: 2022-04-23 23:34:42
  * @FilePath: /why-mini-vue3/src/reactivity/reactive.ts
  * @description: 
  */
@@ -28,6 +28,9 @@ export function isReactive(value) {
 }
 export function isReadonly(value) {
     return !!value[ReactiveFlags.IS_READONLY]
+}
+export function isProxy(value) {
+    return isReactive(value) || isReadonly(value)
 }
 function createActiveObject(raw: any, baseHandlers) {
     return new Proxy(raw, baseHandlers)

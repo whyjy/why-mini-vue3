@@ -2,12 +2,12 @@
  * @Author: wuhongyi
  * @Date: 2022-04-18 09:36:53
  * @LastEditors: wuhongyi5
- * @LastEditTime: 2022-04-21 10:14:38
+ * @LastEditTime: 2022-04-23 23:36:11
  * @FilePath: /why-mini-vue3/src/reactivity/tests/readonly.spec.ts
  * @description: 
  */
 
-import { isReadonly, readonly } from "../reactive"
+import { isReadonly, readonly, isProxy } from "../reactive"
 
 describe('readonly', () => {
     it('happy path', () => {
@@ -21,6 +21,8 @@ describe('readonly', () => {
         //测试嵌套对象是否转换成功
         expect(isReadonly(wrapped.bar)).toBe(true)
         expect(isReadonly(original.bar)).toBe(false)
+        //检测是不是proxy
+        expect(isProxy(wrapped)).toBe(true)
     })
     it('warn then call set', () => {
         console.warn = jest.fn()

@@ -2,11 +2,11 @@
  * @Author: wuhongyi5
  * @Date: 2022-04-05 17:55:01
  * @LastEditors: wuhongyi5
- * @LastEditTime: 2022-04-21 09:34:50
+ * @LastEditTime: 2022-04-23 23:35:46
  * @FilePath: /why-mini-vue3/src/reactivity/tests/reactive.spec.ts
  * @description: 
  */
-import { isReactive, reactive } from '../../reactivity/reactive';
+import { isProxy, isReactive, reactive } from '../../reactivity/reactive';
 describe('reactive', () => {
     it('happy path', () => {
         const original = { foo: 1 }
@@ -17,6 +17,8 @@ describe('reactive', () => {
         expect(observed.foo).toBe(1)
         expect(isReactive(observed)).toBe(true)
         expect(isReactive(original)).toBe(false)
+        //检测是不是proxy
+        expect(isProxy(observed)).toBe(true)
 
     })
     test('nest reactive', () => {
